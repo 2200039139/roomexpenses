@@ -88,7 +88,7 @@ const ExpenseSettlements = ({ expenses = [], roommates = [] }) => {
             >
               <div className="flex items-center gap-2">
                 <span className="font-medium text-red-500">{settlement.from}</span>
-                <span>needs to pay</span>
+                <span> needs to pay </span>
                 <span className="font-medium text-green-500">{settlement.to}</span>
               </div>
               <span className="font-bold">₹{settlement.amount.toFixed(2)}</span>
