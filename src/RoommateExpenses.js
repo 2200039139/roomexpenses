@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import "./RoommateExpenses.css";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, CheckCircle, History } from "lucide-react";
 
-const ExpenseSettlements = ({ expenses = [], roommates = [] }) => {
+const ExpenseSettlements = ({ expenses = [], roommates = [], settledPayments = [], onSettlePayment }) => {
   const calculateSettlements = () => {
     if (!expenses.length || !roommates.length) {
       return [];
@@ -18,6 +18,7 @@ const ExpenseSettlements = ({ expenses = [], roommates = [] }) => {
       balances[roommate] = 0;
     });
 
+    // Calculate initial balances
     expenses.forEach((expense) => {
       if (!expense.paidBy || !expense.amount || !expense.numberOfMembers) return;
 
@@ -29,6 +30,12 @@ const ExpenseSettlements = ({ expenses = [], roommates = [] }) => {
       involvedRoommates.forEach((roommate) => {
         balances[roommate] -= splitAmount;
       });
+    });
+
+    // Adjust balances based on settled payments
+    settledPayments.forEach((settlement) => {
+      balances[settlement.from] += settlement.amount;
+      balances[settlement.to] -= settlement.amount;
     });
 
     const settlements = [];
@@ -72,6 +79,15 @@ const ExpenseSettlements = ({ expenses = [], roommates = [] }) => {
     return settlements;
   };
 
+  const handleSettle = (settlement) => {
+    const historicalSettlement = {
+      ...settlement,
+      timestamp: new Date(),
+      status: 'settled'
+    };
+    onSettlePayment(historicalSettlement);
+  };
+
   const settlements = calculateSettlements();
 
   return (
@@ -84,14 +100,23 @@ const ExpenseSettlements = ({ expenses = [], roommates = [] }) => {
           settlements.map((settlement, index) => (
             <div
               key={index}
-              className="flex items-center justify-between p-3 bg-gray-50 rounded"
+              className="flex items-center justify-between p-3 bg-gray-50 rounded settlement-item"
             >
               <div className="flex items-center gap-2">
                 <span className="font-medium text-red-500">{settlement.from}</span>
-                <span> needs to pay </span>
-                <span className="font-medium text-green-500">{settlement.to}</span>
+                <span>needs to pay</span>
+                <span className="font-medium text-red-500">{settlement.to}</span>
               </div>
-              <span className="font-bold">₹{settlement.amount.toFixed(2)}</span>
+              <div className="flex items-center gap-3">
+                <span className="font-bold">₹{settlement.amount.toFixed(2)}</span>
+                <button
+                  onClick={() => handleSettle(settlement)}
+                  className="settle-button flex items-center px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                >
+                  <CheckCircle className="w-4 h-4 mr-1" />
+                  Settle
+                </button>
+              </div>
             </div>
           ))
         ) : (
@@ -100,6 +125,41 @@ const ExpenseSettlements = ({ expenses = [], roommates = [] }) => {
           </p>
         )}
       </div>
+
+      {/* Settlement History Section */}
+      <div className="mt-8">
+        <div className="border-b pb-4 mb-4">
+          <h2 className="text-xl font-bold flex items-center gap-2">
+            <History className="w-5 h-5" />
+            Settlement History
+          </h2>
+        </div>
+        <div className="space-y-3">
+          {settledPayments.length > 0 ? (
+            settledPayments.map((settlement, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 bg-gray-50 rounded history-item"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-gray-600">{settlement.from}</span>
+                  <span>paid</span>
+                  <span className="font-medium text-gray-600">{settlement.to}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="font-bold">₹{settlement.amount.toFixed(2)}</span>
+                  <span className="text-sm text-gray-500">
+                    {new Date(settlement.timestamp).toLocaleDateString()} at{' '}
+                    {new Date(settlement.timestamp).toLocaleTimeString()}
+                  </span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500 text-center">No settlement history yet</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
@@ -107,6 +167,7 @@ const ExpenseSettlements = ({ expenses = [], roommates = [] }) => {
 const RoommateExpenses = () => {
   const [expenses, setExpenses] = useState([]);
   const [roommates, setRoommates] = useState([""]);
+  const [settledPayments, setSettledPayments] = useState([]);
   const [newExpense, setNewExpense] = useState({
     description: "",
     amount: "",
@@ -168,6 +229,10 @@ const RoommateExpenses = () => {
     });
 
     return expenseShares;
+  };
+
+  const handleSettlePayment = (settlement) => {
+    setSettledPayments(prev => [settlement, ...prev]);
   };
 
   return (
@@ -267,7 +332,12 @@ const RoommateExpenses = () => {
         </div>
       </div>
 
-      <ExpenseSettlements expenses={expenses} roommates={roommates} />
+      <ExpenseSettlements 
+        expenses={expenses} 
+        roommates={roommates}
+        settledPayments={settledPayments}
+        onSettlePayment={handleSettlePayment}
+      />
     </div>
   );
 };
