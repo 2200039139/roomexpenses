@@ -1,8 +1,130 @@
 import React, { useState } from 'react';
 import './RoommateExpenses.css';
-
 import { PlusCircle, Edit2, Check, X } from 'lucide-react';
 
+const ExpenseSettlements = ({ expenses = [], roommates = [] }) => {
+  const calculateSettlements = () => {
+    // Skip calculations if no data
+    if (!expenses.length || !roommates.length) {
+      return [];
+    }
+
+    // Filter out empty roommate names
+    const activeRoommates = roommates.filter(roommate => roommate);
+    
+    if (activeRoommates.length === 0) {
+      return [];
+    }
+
+    // Initialize balances for each roommate
+    const balances = {};
+    activeRoommates.forEach(roommate => {
+      balances[roommate] = 0;
+    });
+
+    // Calculate net balance for each person
+    expenses.forEach(expense => {
+      if (!expense.paidBy || !expense.amount || !expense.numberOfMembers) return;
+      
+      const amount = Number(expense.amount);
+      const splitAmount = amount / expense.numberOfMembers;
+      
+      // Add the full amount to the payer's balance
+      balances[expense.paidBy] += amount;
+      
+      // Subtract the split amount from each person involved
+      const involvedRoommates = activeRoommates.slice(0, expense.numberOfMembers);
+      involvedRoommates.forEach(roommate => {
+        balances[roommate] -= splitAmount;
+      });
+    });
+
+    // Create settlements
+    const settlements = [];
+    const epsilon = 0.01; // To handle floating point precision
+
+    while (true) {
+      // Find max creditor and debtor
+      let maxCreditor = null;
+      let maxDebtor = null;
+      let maxCredit = epsilon;
+      let maxDebt = epsilon;
+
+      for (const [person, balance] of Object.entries(balances)) {
+        if (balance > maxCredit) {
+          maxCredit = balance;
+          maxCreditor = person;
+        }
+        if (balance < -maxDebt) {
+          maxDebt = -balance;
+          maxDebtor = person;
+        }
+      }
+
+      // If no significant balances remain, we're done
+      if (!maxCreditor || !maxDebtor) break;
+
+      // Calculate settlement amount
+      const settlementAmount = Math.min(maxCredit, maxDebt);
+      
+      if (settlementAmount > epsilon) {
+        settlements.push({
+          from: maxDebtor,
+          to: maxCreditor,
+          amount: Number(settlementAmount.toFixed(2))
+        });
+
+        // Update balances
+        balances[maxCreditor] -= settlementAmount;
+        balances[maxDebtor] += settlementAmount;
+      } else {
+        break;
+      }
+    }
+
+    return settlements;
+  };
+
+  // Early return if no data
+  if (!expenses?.length || !roommates?.length) {
+    return (
+      <div className="bg-white rounded-lg shadow-md p-6 mt-6">
+        <div className="border-b pb-4 mb-4">
+          <h2 className="text-2xl font-bold">Settlements</h2>
+        </div>
+        <p className="text-gray-500 text-center">Add some expenses and roommates to see settlements</p>
+      </div>
+    );
+  }
+
+  const settlements = calculateSettlements();
+
+  return (
+    <div className="bg-white rounded-lg shadow-md p-6 mt-6">
+      <div className="border-b pb-4 mb-4">
+        <h2 className="text-2xl font-bold">Settlements</h2>
+      </div>
+      <div className="space-y-3">
+        {settlements.length > 0 ? (
+          settlements.map((settlement, index) => (
+            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+              <div className="flex items-center gap-2">
+                <span className="font-medium text-red-500">{settlement.from}</span>
+                <span>needs to pay</span>
+                <span className="font-medium text-green-500">{settlement.to}</span>
+              </div>
+              <span className="font-bold">₹{settlement.amount.toFixed(2)}</span>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500 text-center">No settlements needed - all expenses are settled!</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Rest of the RoommateExpenses component remains the same
 const RoommateExpenses = () => {
   const [expenses, setExpenses] = useState([]);
   const [roommates, setRoommates] = useState(['']);
@@ -261,7 +383,7 @@ const RoommateExpenses = () => {
                   <div className="flex justify-between">
                     <span className="font-medium">{expense.description}</span>
                     <div className="flex items-center gap-4">
-                      <span>₹{Number(expense.amount).toFixed(2)}</span>
+                    <span>₹{Number(expense.amount).toFixed(2)}</span>
                       <button
                         onClick={() => startEditing(expense)}
                         className="p-1 hover:bg-gray-100 rounded"
@@ -282,6 +404,8 @@ const RoommateExpenses = () => {
           ))}
         </div>
       </div>
+
+      <ExpenseSettlements expenses={expenses} roommates={roommates} />
     </div>
   );
 };
