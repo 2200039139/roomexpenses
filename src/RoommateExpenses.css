@@ -1,267 +1,266 @@
 /* General Settings */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7fc;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Define CSS Variables for Colors */
+:root {
+  --primary-color: #2563eb;
+  --secondary-color: #10b981;
+  --gray-light: #f9fafb;
+  --gray-dark: #4b5563;
+  --border-color: #e5e7eb;
+  --hover-color: #059669;
+}
+
+/* Container */
+.max-w-4xl {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.rounded-lg {
+  border-radius: 8px;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mb-6 {
+  margin-bottom: 24px;
+}
+
+.p-6 {
+  padding: 24px;
+}
+
+.mt-6 {
+  margin-top: 24px;
+}
+
+/* Header */
+h2, h3 {
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: var(--gray-dark);
+}
+
+h3 {
+  font-size: 1.125rem;
+  color: var(--gray-dark);
+}
+
+/* Inputs and Buttons */
+input,
+select,
+button {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+input:focus,
+select:focus,
+button:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background-color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+/* Flexbox Layouts */
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+.gap-3 {
+  gap: 12px;
+}
+
+.gap-4 {
+  gap: 16px;
+}
+
+/* Layout of Add Roommate */
+.add-roommate-container {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.roommate-input {
+  margin-bottom: 12px;
+}
+
+.add-roommate-btn {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-roommate-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Expense Card */
+.settlement-item,
+.history-item {
+  background-color: var(--gray-light);
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.settlement-item:hover,
+.history-item:hover {
+  background-color: #f1f5f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.settlement-item .font-medium {
+  font-weight: 600;
+}
+
+.settle-button {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: var(--secondary-color);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.settle-button:hover {
+  background-color: var(--hover-color);
+}
+
+.history-item .text-sm {
+  color: #6b7280;
+}
+
+/* Expense Summary */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f7fc;
-    color: #333;
-    line-height: 1.6;
-  }
-  
-  /* Define CSS Variables for Colors */
-  :root {
-    --primary-color: #2563eb;
-    --secondary-color: #10b981;
-    --gray-light: #f9fafb;
-    --gray-dark: #4b5563;
-    --border-color: #e5e7eb;
-    --hover-color: #059669;
-  }
-  
-  /* Container */
-  .max-w-4xl {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .bg-white {
-    background-color: white;
-  }
-  
-  .rounded-lg {
-    border-radius: 8px;
-  }
-  
-  .shadow-md {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .mb-6 {
-    margin-bottom: 24px;
-  }
-  
-  .p-6 {
-    padding: 24px;
-  }
-  
-  .mt-6 {
-    margin-top: 24px;
-  }
-  
-  /* Header */
-  h2, h3 {
-    font-weight: 600;
-  }
-  
-  h2 {
-    font-size: 1.5rem;
-    color: var(--gray-dark);
-  }
-  
-  h3 {
-    font-size: 1.125rem;
-    color: var(--gray-dark);
-  }
-  
-  /* Inputs and Buttons */
-  input,
-  select,
-  button {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 1rem;
-  }
-  
-  input:focus,
-  select:focus,
-  button:focus {
-    outline: none;
-    border-color: var(--primary-color);
-  }
-  
-  button {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  button:hover {
-    background-color: var(--primary-color);
-    transform: translateY(-2px);
-  }
-  
-  /* Flexbox Layouts */
-  .flex {
-    display: flex;
-  }
-  
-  .items-center {
-    align-items: center;
-  }
-  
-  .justify-between {
-    justify-content: space-between;
-  }
-  
-  .gap-2 {
-    gap: 8px;
-  }
-  
-  .gap-3 {
-    gap: 12px;
-  }
-  
-  .gap-4 {
-    gap: 16px;
-  }
-  
-  /* Layout of Add Roommate */
-  .add-roommate-container {
-    margin-top: 12px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .roommate-input {
-    margin-bottom: 12px;
-  }
-  
-  .add-roommate-btn {
-    margin-top: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .add-roommate-btn:hover {
-    transform: scale(1.05);
-  }
-  
-  /* Expense Card */
+}
+
+.total-expenses {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--gray-dark);
+}
+
+.per-person-share {
+  margin-top: 16px;
+}
+
+.per-person-share .font-medium {
+  font-weight: 600;
+}
+
+.flex.justify-between {
+  margin-top: 12px;
+}
+
+.roommate-expenses-container {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.roommate-expenses-header {
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.settlement-history-container {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.settlement-history-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--gray-dark);
+}
+
+.history-item-text {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
   .settlement-item,
   .history-item {
-    background-color: var(--gray-light);
-    padding: 16px;
-    border-radius: 8px;
-    margin-bottom: 12px;
+    padding: 14px;
   }
-  
-  .settlement-item:hover,
-  .history-item:hover {
-    background-color: #f1f5f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .flex.gap-4 {
+    gap: 12px;
   }
-  
-  .settlement-item .font-medium {
-    font-weight: 600;
-  }
-  
-  .settle-button {
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
-    background-color: var(--secondary-color);
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  
-  .settle-button:hover {
-    background-color: var(--hover-color);
-  }
-  
-  .history-item .text-sm {
-    color: #6b7280;
-  }
-  
-  /* Expense Summary */
+
+  /* Make grid one column on smaller screens */
   .grid {
-    display: grid;
     grid-template-columns: 1fr;
-    gap: 16px;
   }
-  
-  @media (min-width: 768px) {
-    .grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  
-  .total-expenses {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: var(--gray-dark);
-  }
-  
-  .per-person-share {
-    margin-top: 16px;
-  }
-  
-  .per-person-share .font-medium {
-    font-weight: 600;
-  }
-  
-  .flex.justify-between {
-    margin-top: 12px;
-  }
-  
-  .roommate-expenses-container {
-    margin-top: 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .roommate-expenses-header {
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 16px;
-    margin-bottom: 20px;
-  }
-  
-  .settlement-history-container {
-    margin-top: 32px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .settlement-history-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--gray-dark);
-  }
-  
-  .history-item-text {
-    font-size: 0.875rem;
-    color: #6b7280;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 640px) {
-    .settlement-item,
-    .history-item {
-      padding: 14px;
-    }
-  
-    .flex.gap-4 {
-      gap: 12px;
-    }
-  
-    /* Make grid one column on smaller screens */
-    .grid {
-      grid-template-columns: 1fr;
-    }
-  }
-  
-  
+}
+
